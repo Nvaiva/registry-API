@@ -20,7 +20,7 @@ public class RealEstateController {
 
     @PostMapping
     @ResponseBody
-    @Operation(summary = "Add real estate to a database", description = "Insert a record in application/json format", tags = {"Real estate"})
+    @Operation(summary = "Add/update real estate to a database", description = "Insert a record in application/json format", tags = {"Real estate"})
     public RealEstate addPropertyType(@RequestBody RealEstate realEstate){
         return realEstateService.addRealEstate(realEstate);
     }

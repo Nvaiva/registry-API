@@ -1,7 +1,6 @@
 package com.rest.registry.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,19 +31,18 @@ public class RealEstate {
     Double size;
 
     @Column
-   // @NotBlank(message = "Market value of the real estate is required")
+    @NotNull(message = "Market value of the real estate is required")
     BigDecimal marketValue;
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "buildingOwner",
             joinColumns = {@JoinColumn(name = "fk_realEstate", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "fk_owner", referencedColumnName = "id")}
     )
-    Set<Owner> owners = new HashSet<Owner>();
+    Set<Owner> owners = new HashSet<>();
 
-    @JsonBackReference
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "propertytype_id", referencedColumnName = "id")
     PropertyType propertyType;
 
@@ -93,6 +91,7 @@ public class RealEstate {
         this.number = number;
     }
 
+
     public PropertyType getPropertyType() {
         return propertyType;
     }
@@ -117,6 +116,7 @@ public class RealEstate {
         this.marketValue = marketValue;
     }
 
+    @JsonIgnore
     public Set<Owner> getOwners() {
         return owners;
     }
@@ -124,4 +124,5 @@ public class RealEstate {
     public void setOwners(Set<Owner> owners) {
         this.owners = owners;
     }
+
 }

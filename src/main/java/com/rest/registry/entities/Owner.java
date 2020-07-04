@@ -1,7 +1,6 @@
 package com.rest.registry.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -22,14 +21,16 @@ public class Owner {
     @NotBlank(message = "The last name is required")
     String lastName;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "owners")
+    @ManyToMany(cascade = CascadeType.ALL)
     Set<RealEstate> realEstates = new HashSet<>();
 
-    public Owner(@NotBlank(message = "The name is required") String firstName, @NotBlank(message = "The last name is required") String lastName) {
+    public Owner(@NotBlank(message = "The name is required") String firstName, @NotBlank(message = "The last name is required") String lastName, Set<RealEstate> realEstates) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.realEstates = realEstates;
     }
 
+    @JsonIgnore
     public Set<RealEstate> getRealEstates() {
         return realEstates;
     }
@@ -65,12 +66,5 @@ public class Owner {
         this.lastName = lastName;
     }
 
-    //we use this method for better looking outputs
-    @Override
-    public String toString() {
-        return "Owner \n" +
-                "First name: " + firstName + "\n" +
-                "Last name: " + lastName + "\n";
-    }
 
 }

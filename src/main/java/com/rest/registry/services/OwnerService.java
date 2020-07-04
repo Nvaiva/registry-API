@@ -6,8 +6,6 @@ import com.rest.registry.repositories.OwnerRepository;
 import com.rest.registry.repositories.RealEstateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,40 +24,46 @@ public class OwnerService {
         this.realEstateRepo = realEstateRepo;
     }
 
-    public Owner addOwner(Owner owner){
+    public Owner addOwner(Owner owner) {
         ownerRepo.save(owner);
         return owner;
     }
-    public Owner getById (Integer id){
-        Owner owner = ownerRepo.getById(id);
-        return owner;
+
+    public Owner getById(Integer id) {
+        return ownerRepo.getById(id);
+
     }
-    public List<Owner> getOwners(){
+
+    public List<Owner> getOwners() {
         return ownerRepo.findAll();
     }
-    public void deleteOwner(Owner owner){
+
+    public void deleteOwner(Owner owner) {
         ownerRepo.delete(owner);
     }
-    public void deleteOwnerById(Integer id){
+
+    public void deleteOwnerById(Integer id) {
         ownerRepo.deleteById(id);
     }
-    public boolean existsOwner(Integer id){
+
+    public boolean existsOwner(Integer id) {
         return ownerRepo.existsById(id);
     }
 
     public String getTotalTaxes(Integer id) {
-        try {
+
             Owner owner = ownerRepo.getById(id);
+            if (owner == null) return "This onwer does not exist";
+
             Set<RealEstate> realEstates = realEstateRepo.getByOwners(owner);
+            if (realEstates.size() == 0) return "This owner does not have any real estates";
+
             BigDecimal result = new BigDecimal(0.0);
 
             for (RealEstate re : realEstates) {
                 result = result.add(re.getMarketValue().multiply(re.getPropertyType().getTaxRate()));
             }
             return result.toString();
-        }
-        catch (Exception e){
-            return "This onwer does not exist";
-        }
+
     }
 }

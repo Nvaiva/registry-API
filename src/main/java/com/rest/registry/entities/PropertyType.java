@@ -1,6 +1,6 @@
 package com.rest.registry.entities;
 
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "propertytype", uniqueConstraints = @UniqueConstraint(columnNames = {"type", "taxrate"}))
 public class PropertyType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -20,8 +21,9 @@ public class PropertyType {
     @NotNull(message = "Tax rate for the specified property is required")
     BigDecimal taxRate;
 
+
     @JsonIgnore
-    @OneToMany(mappedBy = "propertyType")
+    @OneToMany(mappedBy = "propertyType", cascade = {CascadeType.ALL})
     Set<RealEstate> realEstates;
 
     public PropertyType(String type, BigDecimal taxRate) {
@@ -32,6 +34,7 @@ public class PropertyType {
     public PropertyType() {
     }
 
+    @JsonIgnore
     public Set<RealEstate> getRealEstates() {
         return realEstates;
     }
@@ -63,4 +66,5 @@ public class PropertyType {
     public void setTaxRate(BigDecimal taxRate) {
         this.taxRate = taxRate;
     }
+
 }

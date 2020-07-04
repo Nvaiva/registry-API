@@ -46,38 +46,42 @@ public class OwnerTest {
 
     @Test
     public void getOwnerTest() {
-        when(ownerRepository.findAll()).thenReturn(Stream.of(new Owner("Vaiva", "Nostyte")).collect(Collectors.toList()));
+        when(ownerRepository.findAll()).thenReturn(Stream.of(new Owner("Vaiva", "Nostyte", null)).collect(Collectors.toList()));
         assertEquals(1, ownerService.getOwners().size());
 
     }
 
     @Test
     public void getOwnerTest2() {
-        when(ownerRepository.findAll()).thenReturn(Stream.of(new Owner("Vaiva", "Nostyte"), new Owner("John", "smith")).collect(Collectors.toList()));
+        when(ownerRepository.findAll()).thenReturn(Stream.of(new Owner("Vaiva", "Nostyte", null), new Owner("John", "smith", null)).collect(Collectors.toList()));
         assertEquals(2, ownerService.getOwners().size());
 
     }
 
     @Test
     public void getOwnerByIdTest(){
-        Owner owner = new Owner("Vaiva", "Nostyte");
+        Owner owner = new Owner("Vaiva", "Nostyte",null);
         when(ownerRepository.getById(1)).thenReturn(owner);
         ownerRepository.save(owner);
         assertEquals(owner, ownerService.getById(1));
     }
 
-  /* @Test
+   @Test
     public void testGetTaxes() {
+        //define variables for testing
         BigDecimal expectedValue;
         BigDecimal MARKET_VALUE_1 = new BigDecimal(10000000);
         BigDecimal MARKET_VALUE_2 = new BigDecimal(676676723.12);
         BigDecimal TAX_RATE_1 = new BigDecimal(0.89);
         BigDecimal TAX_RATE_2 = new BigDecimal(0.21);
+
         //create owner
         Set<Owner> ownerSet = new HashSet<>();
-        Owner owner = new Owner("Vaiva", "Nostyte");
-        ownerSet.add(owner);
+        Owner owner = new Owner("Vaiva", "Nostyte", null);
+        ownerSet.add(owner); //we need a set to later add it to real estate object
         ownerRepository.save(owner);
+        when(ownerRepository.getById(1)).thenReturn(owner); // getTotal taxes method in Owner service uses ownerRepository and this function
+
 
         //create propertyTypes
         PropertyType propertyType1 = new PropertyType("Residiential", TAX_RATE_1);
@@ -93,12 +97,12 @@ public class OwnerTest {
         Set<RealEstate> realEstates = new HashSet<>();
         realEstates.add(realEstate1);
         realEstates.add(realEstate2);
-
+        when(realEstateRepository.getByOwners(owner)).thenReturn(realEstates); //Owner service uses this method from realEstateRepository
         owner.setRealEstates(realEstates);
 
         expectedValue = new BigDecimal(String.valueOf(MARKET_VALUE_1.multiply(TAX_RATE_1).add(MARKET_VALUE_2.multiply(TAX_RATE_2))));
-        assertEquals(expectedValue, ownerService.getTotalTaxes(1));
-    }*/
+        assertEquals(expectedValue.toString(), ownerService.getTotalTaxes(1));
+    }
 
 
 }

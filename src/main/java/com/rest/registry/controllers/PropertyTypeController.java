@@ -21,7 +21,7 @@ public class PropertyTypeController {
 
     @PostMapping
     @ResponseBody
-    @Operation(summary = "Add property type to a database", description = "Insert a record in application/json format", tags = {"Property type"})
+    @Operation(summary = "Add/update property type to a database", description = "Insert a record in application/json format", tags = {"Property type"})
     public PropertyType addPropertyType(@RequestBody PropertyType propertyType){
         return propertyTypeService.addPropertyType(propertyType);
     }
