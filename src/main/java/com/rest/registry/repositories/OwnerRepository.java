@@ -5,14 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import java.util.List;
-
 
 @RepositoryRestResource(path = "owner")
 public interface OwnerRepository extends JpaRepository<Owner, Integer> {
-    List<Owner> getByFirstName(@Param("firstName") String firstName);
+
     Owner getById(@Param("id") Integer id);
-    List<Owner> getByLastName(@Param("lastName") String lastName);
 
     /* VERY INACCURATE ANSWER
     @Query(value = "SELECT SUM (realEstate.market_value * propertyType.tax_rate) " +

@@ -29,6 +29,8 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class OwnerTest {
 
+    // I do not test other services because they are quite identical to owners service.
+
     @MockBean
     private OwnerRepository ownerRepository;
     @MockBean
@@ -59,14 +61,14 @@ public class OwnerTest {
     }
 
     @Test
-    public void getOwnerByIdTest(){
-        Owner owner = new Owner("Vaiva", "Nostyte",null);
+    public void getOwnerByIdTest() {
+        Owner owner = new Owner("Vaiva", "Nostyte", null);
         when(ownerRepository.getById(1)).thenReturn(owner);
         ownerRepository.save(owner);
         assertEquals(owner, ownerService.getById(1));
     }
 
-   @Test
+    @Test
     public void testGetTaxes() {
         //define variables for testing
         BigDecimal expectedValue;

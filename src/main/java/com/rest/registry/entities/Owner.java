@@ -1,6 +1,6 @@
 package com.rest.registry.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -21,7 +21,7 @@ public class Owner {
     @NotBlank(message = "The last name is required")
     String lastName;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "owners", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     Set<RealEstate> realEstates = new HashSet<>();
 
     public Owner(@NotBlank(message = "The name is required") String firstName, @NotBlank(message = "The last name is required") String lastName, Set<RealEstate> realEstates) {
@@ -30,7 +30,7 @@ public class Owner {
         this.realEstates = realEstates;
     }
 
-    @JsonIgnore
+    @JsonManagedReference
     public Set<RealEstate> getRealEstates() {
         return realEstates;
     }
@@ -66,5 +66,12 @@ public class Owner {
         this.lastName = lastName;
     }
 
+    @PreRemove
+    public void remove() {
+        for (RealEstate re : realEstates
+        ) {
+            re.getOwners().remove(this);
+        }
+    }
 
 }

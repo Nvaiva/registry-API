@@ -52,18 +52,18 @@ public class OwnerService {
 
     public String getTotalTaxes(Integer id) {
 
-            Owner owner = ownerRepo.getById(id);
-            if (owner == null) return "This onwer does not exist";
+        Owner owner = ownerRepo.getById(id);
+        if (owner == null) return "This onwer does not exist";
 
-            Set<RealEstate> realEstates = realEstateRepo.getByOwners(owner);
-            if (realEstates.size() == 0) return "This owner does not have any real estates";
+        Set<RealEstate> realEstates = realEstateRepo.getByOwners(owner);
+        if (realEstates.size() == 0) return "This owner does not have any real estates";
 
-            BigDecimal result = new BigDecimal(0.0);
+        BigDecimal result = new BigDecimal(0.0);
 
-            for (RealEstate re : realEstates) {
-                result = result.add(re.getMarketValue().multiply(re.getPropertyType().getTaxRate()));
-            }
-            return result.toString();
+        for (RealEstate re : realEstates) {
+            result = result.add(re.getMarketValue().multiply(re.getPropertyType().getTaxRate()));
+        }
+        return result.toString();
 
     }
 }

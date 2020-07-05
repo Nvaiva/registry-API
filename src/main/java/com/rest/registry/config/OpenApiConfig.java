@@ -7,17 +7,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-
 @Configuration
 public class OpenApiConfig {
 
-   @Bean
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .components(new Components())
                 .info(new Info().title("REST API for a simple real estate registry for buildings")
                         .description("Manage data in the registry"));
 
-        //to do info
     }
 }

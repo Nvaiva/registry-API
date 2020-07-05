@@ -22,8 +22,7 @@ public class PropertyType {
     BigDecimal taxRate;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "propertyType", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "propertyType")
     Set<RealEstate> realEstates;
 
     public PropertyType(String type, BigDecimal taxRate) {

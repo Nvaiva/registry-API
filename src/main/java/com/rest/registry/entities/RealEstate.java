@@ -1,6 +1,6 @@
 package com.rest.registry.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -35,14 +35,14 @@ public class RealEstate {
     BigDecimal marketValue;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "buildingOwner",
             joinColumns = {@JoinColumn(name = "fk_realEstate", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "fk_owner", referencedColumnName = "id")}
     )
     Set<Owner> owners = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "propertytype_id", referencedColumnName = "id")
     PropertyType propertyType;
 
@@ -116,13 +116,21 @@ public class RealEstate {
         this.marketValue = marketValue;
     }
 
-    @JsonIgnore
+    @JsonBackReference
     public Set<Owner> getOwners() {
         return owners;
     }
 
     public void setOwners(Set<Owner> owners) {
         this.owners = owners;
+    }
+
+    @PreRemove
+    public void remove() {
+        for (Owner owner : owners
+        ) {
+            owner.getRealEstates().remove(this);
+        }
     }
 
 }
